@@ -1,0 +1,14 @@
+{
+  "name": "web-control.io",
+  "version": "0.0.1",
+  "description": "an SDK of web control",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "web-control.io"
+  ],
+  "author": "Ltre",
+  "license": "MIT"
+}
