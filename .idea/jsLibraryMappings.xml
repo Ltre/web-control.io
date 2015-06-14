@@ -2,5 +2,6 @@
 <project version="4">
   <component name="JavaScriptLibraryMappings">
     <file url="file://$PROJECT_DIR$" libraries="{web-control.io node_modules}" />
+    <file url="file://$PROJECT_DIR$/index.js" libraries="{Node.js Globals, Node.js v0.10.31 Core Modules}" />
   </component>
 </project>

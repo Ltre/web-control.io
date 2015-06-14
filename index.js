@@ -1,14 +1,31 @@
 var Server = require('http').createServer();
 var IO = require('socket.io')(Server);
+var _ = require('underscore');
 
-IO.on('connection', function(socket){
-	
-	socket.join(-(-new Date()));
+var ControlRooms = {/* token : [socket1,socket2] */};
+
+IO.on('connect', function(socket){
+
+	//注册控制间
+	socket.on('fm/regCmd', function(token){
+		if (undefined === ControlRooms[token]) {
+			ControlRooms[token] = [socket];
+		} else {
+			ControlRooms[token].push(socket);
+		}
+	});
+
 	//接口：主控端向被控端发送命令
-	socket.on('fm/sendCMD', function(token, type, value){
+	socket.on('fm/sendCmd', function(token, type, value){
 		if (! token) return;
-		console.log([token, type, value]);
-		IO.emit('fm/acceptCMD', token, type, value);//暂未解决点对点问题，先用群发配合token来识别同一通道的客户端
+		_.each(ControlRooms[token], function(e){
+			e.emit('fm/acceptCmd', token, type, value);
+		});
+	});
+
+	//控制所有被控端的行为（不依赖ControlRoom）
+	socket.on('fm/sendCmdToAll', function(type, value){
+		IO.emit('fm/acceptCmd', token, type, value);
 	});
 	
 });
