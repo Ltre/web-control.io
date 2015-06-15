@@ -23,7 +23,7 @@ IO.on('connect', function(socket){
 		});
 	});
 
-	//控制所有被控端的行为（不依赖ControlRoom）
+	//控制所有被控端的行为（不依赖ControlRooms）
 	socket.on('fm/sendCmdToAll', function(type, value){
 		IO.emit('fm/acceptCmd', token, type, value);
 	});
