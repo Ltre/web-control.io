@@ -1,42 +1,46 @@
-//加入clientId，防止广告广播作用到发出者
-
 var Server = require('http').createServer();
 var IO = require('socket.io')(Server);
 var _ = require('underscore');
 
 var ControlRooms = {};
+var platforms = ['fm', 'ctrl'];
 
 var func = {
-    regCmd: function(platform, clientId, token){
-        if (! platform in ControlRooms) ControlRooms[platform] = {};}
-        if (! action in ControlRooms[platform]) ControlRooms[platform][action] = {};
-        if (! token in ControlRooms[platform][action]) {
-            ControlRooms[platform][action] = [socket];
+    regCmd: function(socket, platform, token){
+        var action = 'regCmd';
+        if (! (platform in ControlRooms)) ControlRooms[platform] = {};
+        if (token in ControlRooms[platform]) {
+            ControlRooms[platform][token].push(socket);
         } else {
-            ControlRooms[platform][action].push(socket);
-        }   
+            ControlRooms[platform][token] = [socket];
+        }
     },
-    sendCmd: function(platform, clientId, token, type, value){
+    sendCmd: function(socket, platform, token, type, value){
 		if (! token) return;
-		_.each(ControlRooms[token], function(e){
-            var backCmd = platform + '/' + arguments.callee.name;
-            e.emit(backCmd, token, type, value);
+		_.each(ControlRooms[platform][token], function(e){
+            var backCmd = platform + '/acceptCmd';
+            if (socket != e) { //不发给自己
+                e.emit(backCmd, token, type, value);
+            }
 		});
     },
-    sendCmdToAll: function(platform, clientId, type, value){
-        var backCmd = platform + '/' + arguments.callee.name;
+    sendCmdToAll: function(platform, type, value){
+        var backCmd = platform + '/acceptCmdToAll';
         IO.emit(backCmd, null, type, value);
     }
 };
 
-
 IO.on('connect', function(socket){
-    socket.on(cmd, function(token){
-        cmd = cmd.split('/');
-        var platform = cmd[0];
-        var action = cmd[1];
-        arguments.unshift(socked.id);//这里是伪代码，获取clientID
-        arguments.unshift(platform);
-        func[action].apply(this, arguments);
-    });
+    for (var i in platforms) {
+        for (var j in func) {
+            ~ function(cmd, platform, action){
+                socket.on(cmd, function(){
+                    arguments = Array.prototype.concat.apply([socket,platform], arguments);
+                    func[action].apply(this, arguments);
+                });
+            }(platforms[i]+'/'+j, platforms[i], j);
+        }
+    }
 });
+
+IO.listen('3000');
