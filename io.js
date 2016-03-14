@@ -19,7 +19,7 @@ var func = {
 		if (! token) return;
 		_.each(ControlRooms[platform][token], function(e){
             var backCmd = platform + '/acceptCmd';
-            if (socket != e) { //²»·¢¸ø×Ô¼º
+            if (socket != e) { //ä¸å‘ç»™è‡ªå·±
                 e.emit(backCmd, token, type, value);
             }
 		});
