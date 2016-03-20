@@ -1,3 +1,10 @@
+/**
+ * ²Î¿¼×ÊÁÏ£º
+ *      https://github.com/socketio/socket.io-emitter
+ *      https://github.com/socketio/socket.io-redis
+ *      http://socket.io/docs/rooms-and-namespaces/
+ *      https://github.com/socketio/socket.io
+ */
 var Server = require('http').createServer();
 var IO = require('socket.io')(Server);
 var _ = require('underscore');
