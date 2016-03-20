@@ -26,7 +26,7 @@ var func = {
 		if (! token) return;
 		_.each(ControlRooms[platform][token], function(e){
             var backCmd = platform + '/acceptCmd';
-            if (socket != e) { //ä¸å‘ç»™è‡ªå·±
+            if (socket != e) { //²»·¢¸ø×Ô¼º
                 e.emit(backCmd, token, type, value);
             }
 		});
