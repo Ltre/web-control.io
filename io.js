@@ -31,7 +31,7 @@ var func = {
             }
 		});
     },
-    sendCmdToAll: function(platform, type, value){
+    sendCmdToAll: function(socket, platform, type, value){
         var backCmd = platform + '/acceptCmdToAll';
         IO.emit(backCmd, null, type, value);
     }
