@@ -10,7 +10,7 @@ var IO = require('socket.io')(Server);
 var _ = require('underscore');
 
 var ControlRooms = {};
-var platforms = ['fm', 'ctrl'];
+var platforms = ['fm', 'ctrl', 'jgy'];//miku.us/fm/ctrlview/xxx、miku.us/ctrl/qr#sb、res.miku.us/#!m20&showControlView=xxx
 
 var func = {
     regCmd: function(socket, platform, token){
