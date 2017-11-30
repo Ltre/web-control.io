@@ -30,7 +30,6 @@
                     var socket = io.connect('http://io.yooo.moe:3000');
                     var localToken = (location.href.match(/\#.*[?&]?showControlView\=([^&]+)/)||[,-1])[1];
                     if (-1 === localToken) { //被控端
-                        debugger;
                         localToken = + new Date();
                         socket.emit('ctrl/regCmd', localToken);
                         socket.on('ctrl/acceptCmd', function(rToken, type, value){
