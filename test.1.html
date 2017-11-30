@@ -1,0 +1,98 @@
+<html>
+    <head></head>
+    <body>
+
+        <p>web-control.io/test.html</p>
+
+        <p>Example test: http://cms.acggeek.com/%E6%B5%8B%E8%AF%95web-control.io%E6%8E%A7%E5%88%B6</p>
+
+        <p>Just forward this url: <a id="controller" href="javascript:;" target="_blank"></a></p>
+
+        <script>
+
+        function controlable(tokenGetter, master, slave) {
+
+            var loadToLoad = function(cb) {
+                var e = document.createElement('script');
+                e.setAttribute('type', 'text/javascript');
+                e.setAttribute('src', '//res.miku.us/res/js/loadScript.js');
+                document.body.appendChild(e);
+                var iv = setInterval(function(){
+                    if ('Ltrelib' in window && 'loadScript' in window.Ltrelib) {
+                        clearInterval(iv);
+                        if (typeof cb == 'function') {
+                            cb.call(this, window.Ltrelib.loadScript);
+                        }
+                    }
+                }, 100);
+            };
+
+            loadToLoad(function(loadScript){
+                loadScript('//cdn.bootcss.com/socket.io/1.3.5/socket.io.min.js', function(){
+                    loadScript('//cdn.bootcss.com/jquery/1.9.1/jquery.min.js', function(){
+                        var socket = io.connect('http://io.yooo.moe:3000');
+                        //var localToken = (location.href.match(/\#.*[?&]?showControlView\=([^&]+)/)||[,-1])[1];
+                        var localToken = tokenGetter(socket);
+
+                        socket.emit('ctrl/regCmd', localToken);
+                        socket.on('ctrl/acceptCmd', function(rToken, type, value){
+                            if (localToken == rToken) {
+                                slave.onAccept(socket, localToken, type, value);
+                            }
+                        });
+                        slave.initializer(socket, token);
+
+                        var emit = function(type, value){
+                            socket.emit('ctrl/sendCmd', token, type, value);
+                        };
+                        master.emitor(emit);
+
+                    }, function(win){ return 'jQuery' in win; });
+                }, function(win){ return 'io' in win; });
+            });
+
+        }
+
+
+        controlable({
+            tokenGetter: function(socket){
+                var token = (location.href.match(/\#.*[?&]?showControlView\=([^&]+)/)||[,-1])[1];
+                if (-1 === $token) {
+                    token = + new Date();
+                }
+                return token;
+            },
+            master: {
+                emitor: function(emit){
+                    emit('shell2', 'This is an value from controller!');//主控端发指令
+                }
+            },
+            slave: {
+                onAccept: function(socket, token, type, value) { //被控端接收指令
+                    alert(value);
+                    switch (type) {
+                        case 'shell1': 
+                            alert(1);
+                            break;
+                        case 'shell2':
+                            alert(2);
+                            break;
+                        default:
+                            alert('default');
+                    }
+                },
+                initializer: function(socket, token) { //用于生成主控端访问方式
+                    var c = document.getElementById('controller');
+                    var h = location.href + '#showControlView=' + token;
+                    c.innerText = h;
+                    c.href = h;
+                }
+            }
+        });
+
+        </script>
+
+    </body>
+</html>
+
+<!-- howToGetToken, acceptCb,  -->
