@@ -1,0 +1,60 @@
+<html>
+    <head></head>
+    <body>
+
+        <p>Just forward this url: <a id="controller" href="javascript:;" target="_blank"></a></p>
+
+        <script>
+        function loadToLoad(cb){
+            var e = document.createElement('script');
+            e.setAttribute('type', 'text/javascript');
+            e.setAttribute('src', '//res.miku.us/res/js/loadScript.js');
+            document.body.appendChild(e);
+            var iv = setInterval(function(){
+                if ('Ltrelib' in window && 'loadScript' in window.Ltrelib) {
+                    clearInterval(iv);
+                    if (typeof cb == 'function') {
+                        cb.call(this, window.Ltrelib.loadScript);
+                    }
+                }
+            }, 100);
+        }
+
+        loadToLoad(function(loadScript){
+            loadScript('//cdn.bootcss.com/socket.io/1.3.5/socket.io.min.js', function(){
+                loadScript('//cdn.bootcss.com/jquery/1.9.1/jquery.min.js', function(){
+                    var socket = io.connect('http://io.yooo.moe:3000');
+                    var localToken = (location.href.match(/\#.*[?&]?showControlView\=([^&]+)/)||[,-1])[1];
+                    if (-1 === localToken) { //被控端
+                        debugger;
+                        localToken = + new Date();
+                        socket.emit('ctrl/regCmd', localToken);
+                        socket.on('ctrl/acceptCmd', function(rToken, type, value){
+                            alert(value);
+                            if (localToken != rToken) return;
+                            switch (type) {
+                                case 'shell1':
+                                    alert('1');
+                                    break;
+                                case 'shell2':
+                                    alert('2');
+                                    break;
+                                default:
+                            }
+                        });
+                        //额外的东西
+                        var c = document.getElementById('controller');
+                        var h = location.href + '#showControlView=' + localToken;
+                        c.innerText = h;
+                        c.href = h;
+                    } else { //主控端
+                        debugger;
+                        socket.emit('ctrl/sendCmd', localToken, 'shell2', 'This is an value from controller!');
+                    }
+                }, function(win){ return 'jQuery' in win; });
+            }, function(win){ return 'io' in win; });
+        });
+        </script>
+
+    </body>
+</html>
