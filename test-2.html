@@ -10,26 +10,25 @@
 
         <script>
 
-        function controlable(opt) {
-
-            var loadToLoad = function(cb) {
-                var e = document.createElement('script');
-                e.setAttribute('type', 'text/javascript');
-                e.setAttribute('src', '//res.miku.us/res/js/loadScript.js');
-                document.body.appendChild(e);
-                var iv = setInterval(function(){
-                    if ('Ltrelib' in window && 'loadScript' in window.Ltrelib) {
-                        clearInterval(iv);
-                        if (typeof cb == 'function') {
-                            cb.call(this, window.Ltrelib.loadScript);
-                        }
+        function loadToLoad(cb) {
+            var e = document.createElement('script');
+            e.setAttribute('type', 'text/javascript');
+            e.setAttribute('src', '//res.miku.us/res/js/loadScript.js');
+            document.body.appendChild(e);
+            var iv = setInterval(function(){
+                if ('Ltrelib' in window && 'loadScript' in window.Ltrelib) {
+                    clearInterval(iv);
+                    if (typeof cb == 'function') {
+                        cb.call(this, window.Ltrelib.loadScript);
                     }
-                }, 100);
-            };
+                }
+            }, 100);
+        }
 
+
+        function controlable(opt) {
             loadToLoad(function(loadScript){
                 loadScript('//cdn.bootcss.com/socket.io/1.3.5/socket.io.min.js', function(){
-                    loadScript('//cdn.bootcss.com/jquery/1.9.1/jquery.min.js', function(){
                         var socket = io.connect('http://io.yooo.moe:3000');
                         var localToken = opt.tokenGetter(socket);
 
@@ -45,11 +44,8 @@
                         opt.emitor(function(type, value){
                             socket.emit('ctrl/sendCmd', localToken, type, value);
                         });
-
-                    }, function(win){ return 'jQuery' in win; });
                 }, function(win){ return 'io' in win; });
             });
-
         }
 
 
@@ -61,8 +57,8 @@
                 }
                 return token;
             },
-            emitor: function(emit){
-                emit('shell2', 'This is an value from controller!');//主控端发指令
+            emitor: function(send){
+                send('shell2', 'This is an value from controller!');//主控端发指令
             },
             onAccept: function(socket, token, type, value) { //被控端接收指令
                 alert(value);
@@ -89,5 +85,3 @@
 
     </body>
 </html>
-
-<!-- howToGetToken, acceptCb,  -->
