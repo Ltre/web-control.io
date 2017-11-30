@@ -27,6 +27,7 @@ var func = {
 		_.each(ControlRooms[platform][token], function(e){
             var backCmd = platform + '/acceptCmd';
             if (socket != e) { //不发给自己
+                //向客户端被控者发送：token-身份标识, type-动作类型, value-附加数据(可选)
                 e.emit(backCmd, token, type, value);
             }
 		});
@@ -41,9 +42,9 @@ IO.on('connect', function(socket){
     for (var i in platforms) {
         for (var j in func) {
             ~ function(cmd, platform, action){
-                socket.on(cmd, function(){
-                    arguments = Array.prototype.concat.apply([socket,platform], arguments);
-                    func[action].apply(this, arguments);
+                socket.on(cmd, function(){ //接受客户端主控者传递的参数：具体结构根据platform来区别
+                    var args = Array.prototype.concat.apply([socket,platform], arguments);
+                    func[action].apply(this, args);
                 });
             }(platforms[i]+'/'+j, platforms[i], j);
         }
