@@ -46,7 +46,7 @@ var func = {
     }
 };
 
-IO.on('connect', function(socket){
+IO.on('connection', function(socket){
     for (var i in platforms) {
         for (var j in func) {
             ~ function(cmd, platform, action){
