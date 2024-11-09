@@ -1,3 +1,4 @@
+@ -1,54 +1,62 @@
 /**
  * 参考资料：
  *      https://github.com/socketio/socket.io-emitter
@@ -5,15 +6,7 @@
  *      http://socket.io/docs/rooms-and-namespaces/
  *      https://github.com/socketio/socket.io
  */
-const fs = require('fs');
-const https = require('https');
-
-const options = {
-    key: fs.readFileSync('/home/wwwcert/miku/io.miku.us/k'),
-    cert: fs.readFileSync('/home/wwwcert/miku/io.miku.us/cert')
-};
-
-var Server = https.createServer(options);
+var Server = require('http').createServer();
 var IO = require('socket.io')(Server);
 var _ = require('underscore');
 
