@@ -9,8 +9,8 @@ const fs = require('fs');
 const https = require('https');
 
 const options = {
-    key: fs.readFileSync('/home/wwwcert/miku/io.miku.us/k'),
-    cert: fs.readFileSync('/home/wwwcert/miku/io.miku.us/cert')
+    key: fs.readFileSync('/etc/letsencrypt/live/io.miku.us/privkey.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/io.miku.us/fullchain.pem')
 };
 
 var Server = https.createServer(options);
