@@ -7,6 +7,7 @@
  */
 const fs = require('fs');
 const https = require('https');
+const socketIO = require('socket.io');
 
 const options = {
     key: fs.readFileSync('/etc/letsencrypt/live/io.miku.us/privkey.pem'),
@@ -14,7 +15,7 @@ const options = {
 };
 
 var Server = https.createServer(options);
-var IO = require('socket.io')(Server);
+var IO = socketIO(Server);
 var _ = require('underscore');
 
 var ControlRooms = {};
@@ -59,4 +60,6 @@ IO.on('connection', function(socket){
     }
 });
 
-IO.listen('3000');
+Server.listen('3000', () => {
+    console.log('Server running on https 3000');
+});
