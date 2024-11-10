@@ -36,7 +36,7 @@ var _ = require('underscore');
 var ControlRooms = {};
 var platforms = ['fm', 'ctrl', 'jgy'];//miku.us/fm/ctrlview/xxx、miku.us/ctrl/qr#sb、res.miku.us/#!m20&showControlView=xxx
 
-var func = {
+var func = { // 声明结构： action => callback(socket, platform, ...){}
     regCmd: function(socket, platform, token){
         var action = 'regCmd';
         if (! (platform in ControlRooms)) ControlRooms[platform] = {};
