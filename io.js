@@ -15,7 +15,22 @@ const options = {
 };
 
 var Server = https.createServer(options);
-var IO = socketIO(Server);
+var IO = socketIO(Server, {
+    cors: {
+        origin: function(origin, callback) {
+          const allowedOrigins = ["https://miku.us", "https://fm.miku.us", "https://larele.com"];
+          if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+          } else {
+            callback(new Error("Not allowed by CORS"));
+          }
+        },
+        methods: ["GET", "POST"],
+        credentials: true,
+        allowedHeaders: ["my-custom-header"]
+    }
+});
+
 var _ = require('underscore');
 
 var ControlRooms = {};

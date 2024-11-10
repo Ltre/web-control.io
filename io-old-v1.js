@@ -1,3 +1,9 @@
+/**
+ * 远古初版
+ * 
+ * 仅支持http
+ */
+
 var Server = require('http').createServer();
 var IO = require('socket.io')(Server);
 var _ = require('underscore');

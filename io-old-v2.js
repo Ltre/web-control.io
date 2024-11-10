@@ -1,5 +1,7 @@
-@ -1,54 +1,62 @@
 /**
+ * 
+ * 仅支持http
+ * 
  * 参考资料：
  *      https://github.com/socketio/socket.io-emitter
  *      https://github.com/socketio/socket.io-redis
